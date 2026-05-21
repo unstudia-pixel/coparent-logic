@@ -146,12 +146,22 @@
       cursor: pointer;
       font-family: var(--font);
       padding: 0;
+      position: relative;
       -webkit-tap-highlight-color: transparent;
     }
     .nav-btn svg { transition: stroke .15s; stroke: var(--text-300); }
     .nav-btn span { font-size: 10px; font-weight: 700; color: var(--text-300); letter-spacing: .02em; transition: color .15s; }
     .nav-btn.on svg  { stroke: var(--blue); }
     .nav-btn.on span { color: var(--blue); }
+    /* Active dot indicator under label */
+    .nav-btn.on::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 4px; height: 4px;
+      background: var(--blue);
+      border-radius: 50%;
+    }
 
     /* ── SHARED UI ── */
     .logo-mark {
@@ -211,9 +221,10 @@
 
     /* ─── SCREEN 1 · ACCEPT INVITE ─── */
     .inv-top {
-      padding: 60px 28px 28px;
+      padding: 56px 28px 28px;
       text-align: center;
       display: flex; flex-direction: column; align-items: center;
+      background: linear-gradient(160deg, var(--bg) 0%, #EEF8F3 55%, #E5F3F9 100%);
     }
     .inv-top h1 {
       font-size: 26px; font-weight: 900; line-height: 1.18;
@@ -373,7 +384,26 @@
     .sum-count { font-size: 16px; font-weight: 900; }
     .sum-count.g { color: var(--green); }
     .sum-count.b { color: var(--blue); }
-    .sum-bar { height: 4px; border-radius: 2px; margin-top: 4px; }
+    /* Proportional split bar */
+    .split-bar-wrap {
+      height: 8px; border-radius: 100px; overflow: hidden;
+      background: var(--border); margin-top: 14px; margin-bottom: 2px;
+      display: flex;
+    }
+    .split-bar-g {
+      height: 100%; border-radius: 100px 0 0 100px;
+      background: var(--green);
+      transition: width .3s ease;
+    }
+    .split-bar-b {
+      height: 100%; border-radius: 0 100px 100px 0; flex: 1;
+      background: var(--blue-soft);
+    }
+    .split-bar-labels {
+      display: flex; justify-content: space-between;
+      font-size: 10px; font-weight: 800; color: var(--text-300);
+      margin-top: 5px; letter-spacing: .02em;
+    }
 
     /* ─── SCREEN 5 · PLAN ─── */
     .plan-sticky {
@@ -399,6 +429,16 @@
       cursor: pointer; flex-shrink: 0;
     }
     /* Tabs */
+    .tabs-wrap {
+      position: relative;
+    }
+    .tabs-wrap::after {
+      content: '';
+      position: absolute; top: 0; right: 0; bottom: 12px;
+      width: 40px;
+      background: linear-gradient(to right, transparent, var(--bg));
+      pointer-events: none; z-index: 2;
+    }
     .tabs-row {
       display: flex; gap: 7px; overflow-x: auto; padding: 0 0 12px;
       scrollbar-width: none; -webkit-overflow-scrolling: touch;
@@ -493,16 +533,21 @@
       padding-top: 5px; position: relative; overflow: hidden;
     }
     .day.mine    { background: var(--green-soft); }
-    .day.theirs  { background: var(--blue-pale); }
+    .day.theirs  { background: var(--blue-soft); }
     .day.empty   { background: transparent; }
-    .day.today   { box-shadow: inset 0 0 0 2px var(--blue); }
+    .day.today   { box-shadow: inset 0 0 0 2px var(--blue); background: var(--blue-pale); }
     .day.today .dn { color: var(--blue); font-weight: 900; }
+    /* Today dot */
+    .today-dot {
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--blue); margin-top: 2px; z-index: 1; flex-shrink: 0;
+    }
     /* Diagonal transition cells */
     .day.tr-m {
-      background: linear-gradient(135deg, var(--green-soft) 50%, var(--blue-pale) 50%);
+      background: linear-gradient(135deg, var(--green-soft) 50%, var(--blue-soft) 50%);
     }
     .day.tr-t {
-      background: linear-gradient(135deg, var(--blue-pale) 50%, var(--green-soft) 50%);
+      background: linear-gradient(135deg, var(--blue-soft) 50%, var(--green-soft) 50%);
     }
     .dn {
       font-size: 12px; font-weight: 800; color: var(--text-900); z-index: 1; line-height: 1;
@@ -531,6 +576,52 @@
       background: var(--blue-pale); color: var(--blue); white-space: nowrap; flex-shrink: 0;
     }
     .up-badge.grey { background: var(--bg-warm); color: var(--text-500); }
+
+    /* Read-only badge */
+    .ro-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--bg-warm); border: 1px solid var(--border);
+      border-radius: 100px; padding: 3px 10px;
+      font-size: 10px; font-weight: 800; color: var(--text-500);
+      letter-spacing: .03em; margin-left: 8px; vertical-align: middle;
+    }
+
+    /* ─── SCREEN 7 · EMPTY STATE ─── */
+    .empty-wrap {
+      padding: 60px 28px 40px;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      flex: 1;
+    }
+    .empty-icon-ring {
+      width: 88px; height: 88px;
+      background: var(--bg-warm); border: 2px solid var(--border); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px;
+    }
+    .empty-wrap h2 {
+      font-size: 22px; font-weight: 900; color: var(--text-900);
+      letter-spacing: -.02em; margin-bottom: 10px;
+    }
+    .empty-wrap p {
+      font-size: 14px; color: var(--text-500); line-height: 1.65;
+      max-width: 272px; margin-bottom: 32px;
+    }
+    .empty-steps {
+      width: 100%; display: flex; flex-direction: column; gap: 12px;
+      margin-bottom: 32px; text-align: left;
+    }
+    .empty-step {
+      display: flex; gap: 14px; align-items: center;
+      background: #fff; border: 1px solid var(--border); border-radius: 16px;
+      padding: 14px 16px;
+    }
+    .step-num {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      background: var(--blue-pale); border: 1.5px solid var(--blue-soft);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 900; color: var(--blue);
+    }
+    .empty-step span { font-size: 13px; font-weight: 700; color: var(--text-700); line-height: 1.4; }
 
     /* ── FLOW CONTROLS (below phone) ── */
     .flow-strip {
@@ -784,7 +875,7 @@
             </svg>
           </div>
 
-          <div class="sec-lbl">This Month</div>
+          <div class="sec-lbl">This Month · June</div>
           <div class="month-sum">
             <div class="sum-row">
               <div class="sum-dot" style="background:var(--green)"></div>
@@ -795,6 +886,15 @@
               <div class="sum-dot" style="background:var(--blue-soft)"></div>
               <span class="sum-label">Co-parent days</span>
               <span class="sum-count b">17</span>
+            </div>
+            <!-- Proportional split bar: 14/31 = 45% green, 55% blue -->
+            <div class="split-bar-wrap">
+              <div class="split-bar-g" style="width:45%"></div>
+              <div class="split-bar-b"></div>
+            </div>
+            <div class="split-bar-labels">
+              <span>14 days yours</span>
+              <span>17 days co-parent</span>
             </div>
           </div>
         </div>
@@ -827,24 +927,33 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-700)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
           <span class="scrn-title">Parenting Plan</span>
-          <button class="icon-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-500)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          </button>
+          <svg width="24" height="24" viewBox="0 0 36.22 36.22" style="flex-shrink:0;border-radius:7px">
+            <rect fill="#3994af" width="36.22" height="36.22" rx="11.04"/>
+            <path fill="#fff" d="M24.81,10.42h-13.4c-2.57,0-4.66,2.08-4.66,4.66v3.15c0,2.57,2.08,4.66,4.66,4.66h5.39l4.79,4.21.6-4.21h2.62c2.57,0,4.66-2.08,4.66-4.66v-3.15c0-2.57-2.08-4.66-4.66-4.66Z"/>
+          </svg>
         </div>
-        <div class="tabs-row">
-          <button class="t-pill on" onclick="setTab(this, 's5')">Schedule</button>
-          <button class="t-pill" onclick="setTab(this, 's5')">Decisions</button>
-          <button class="t-pill" onclick="setTab(this, 's5')">Medical</button>
-          <button class="t-pill" onclick="setTab(this, 's5')">Holidays</button>
-          <button class="t-pill" onclick="setTab(this, 's5')">Education</button>
-          <button class="t-pill" onclick="setTab(this, 's5')">Other</button>
+        <div class="tabs-wrap">
+          <div class="tabs-row">
+            <button class="t-pill on" onclick="setTab(this, 's5')">Schedule</button>
+            <button class="t-pill" onclick="setTab(this, 's5')">Decisions</button>
+            <button class="t-pill" onclick="setTab(this, 's5')">Medical</button>
+            <button class="t-pill" onclick="setTab(this, 's5')">Holidays</button>
+            <button class="t-pill" onclick="setTab(this, 's5')">Education</button>
+            <button class="t-pill" onclick="setTab(this, 's5')">Other</button>
+          </div>
         </div>
       </div>
 
       <div class="scroll-body" style="padding-top:0">
         <div class="plan-body">
-          <div class="plan-h">Custody &amp; Residential Schedule</div>
-          <div class="plan-meta">Updated <a>May 3, 2025</a> · Sarah Lawson, JD · Read-only</div>
+          <div class="plan-h">
+            Custody &amp; Residential Schedule
+            <span class="ro-badge">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              View only
+            </span>
+          </div>
+          <div class="plan-meta">Updated <a>May 3, 2025</a> · Sarah Lawson, JD</div>
 
           <!-- Link to calendar -->
           <div class="cal-cta" onclick="go('s6')">
@@ -933,9 +1042,10 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-700)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
           <span class="scrn-title">Custody Calendar</span>
-          <button class="icon-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-500)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-          </button>
+          <svg width="24" height="24" viewBox="0 0 36.22 36.22" style="flex-shrink:0;border-radius:7px">
+            <rect fill="#3994af" width="36.22" height="36.22" rx="11.04"/>
+            <path fill="#fff" d="M24.81,10.42h-13.4c-2.57,0-4.66,2.08-4.66,4.66v3.15c0,2.57,2.08,4.66,4.66,4.66h5.39l4.79,4.21.6-4.21h2.62c2.57,0,4.66-2.08,4.66-4.66v-3.15c0-2.57-2.08-4.66-4.66-4.66Z"/>
+          </svg>
         </div>
 
         <div class="legend">
@@ -981,7 +1091,7 @@
             <div class="day mine"><span class="dn">11</span></div>
             <div class="day mine"><span class="dn">12</span></div>
             <div class="day mine"><span class="dn">13</span></div>
-            <div class="day tr-t today"><span class="dn">14</span><span class="tr-lbl" style="color:var(--blue-dk)">→ you</span></div>
+            <div class="day tr-t today"><span class="dn">14</span><span class="today-dot"></span></div>
           </div>
           <!-- Week 3: Jun 15–21 -->
           <div class="week-row">
@@ -1053,6 +1163,85 @@
       </div>
     </div>
 
+    <!-- ══════════════════════════════════════
+         SCREEN 7 · EMPTY STATE (no plan yet)
+    ══════════════════════════════════════ -->
+    <div class="screen" id="s7">
+      <div class="scroll-body">
+        <div class="home-header" style="padding-bottom:20px">
+          <div class="home-top-row">
+            <div>
+              <div class="greet">Hi, <em>Jennifer</em> 👋</div>
+              <div class="greet-sub">Your co-parenting toolkit</div>
+            </div>
+            <button class="av-btn">JM</button>
+          </div>
+          <div class="case-pill">
+            <div class="case-lbl">Your Case</div>
+            <div class="case-name">Martinez – Rodriguez</div>
+            <div class="case-pro">Sarah Lawson, JD · Jenkins &amp; Associates</div>
+            <div class="case-tags">
+              <span class="c-tag">Plan Pending</span>
+              <span class="c-tag">Account Active</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-wrap">
+          <div class="empty-icon-ring">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-300)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="12" y1="12" x2="12" y2="16"/>
+              <line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+          </div>
+          <h2>Your plan is on its way</h2>
+          <p>Sarah Lawson, JD is finalizing your parenting plan. You'll get a notification as soon as it's ready to view.</p>
+
+          <div class="empty-steps">
+            <div class="empty-step">
+              <div class="step-num" style="background:var(--green-pale);border-color:var(--green-soft);color:var(--green-dk)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span>Account created — you're in</span>
+            </div>
+            <div class="empty-step">
+              <div class="step-num">2</div>
+              <span>Professional finalizes &amp; publishes your plan</span>
+            </div>
+            <div class="empty-step">
+              <div class="step-num">3</div>
+              <span>Your calendar and plan sections unlock here</span>
+            </div>
+          </div>
+
+          <div style="background:var(--blue-pale);border:1px solid var(--blue-soft);border-radius:16px;padding:16px 18px;width:100%;text-align:left;display:flex;gap:12px;align-items:flex-start">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 9.95 19.79 19.79 0 0 1 1.61 1.35 2 2 0 0 1 3.6 0h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 7.91a16 16 0 0 0 6 6l.94-.94a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.5 15z"/></svg>
+            <div>
+              <div style="font-size:13px;font-weight:900;color:var(--text-900);margin-bottom:3px">Questions? Contact your professional</div>
+              <div style="font-size:12px;color:var(--text-500)">Sarah Lawson, JD · Jenkins &amp; Associates</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bot-nav">
+        <button class="nav-btn on" onclick="go('s7')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Home</span>
+        </button>
+        <button class="nav-btn" style="opacity:.4;pointer-events:none">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke="var(--text-300)" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span>Plan</span>
+        </button>
+        <button class="nav-btn" style="opacity:.4;pointer-events:none">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke="var(--text-300)" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Schedule</span>
+        </button>
+      </div>
+    </div>
+
   </div><!-- /phone-screen -->
 </div><!-- /phone -->
 
@@ -1064,10 +1253,11 @@
   <button class="fb"     onclick="go('s4')">4 · Home</button>
   <button class="fb"     onclick="go('s5')">5 · Plan</button>
   <button class="fb"     onclick="go('s6')">6 · Calendar</button>
+  <button class="fb"     onclick="go('s7')">7 · Empty State</button>
 </div>
 
 <script>
-  const screens  = ['s1','s2','s3','s4','s5','s6'];
+  const screens  = ['s1','s2','s3','s4','s5','s6','s7'];
   const flowBtns = document.querySelectorAll('.flow-strip .fb');
 
   function go(id) {
